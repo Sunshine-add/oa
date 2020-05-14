@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tledu.dao.IMyNoteDao">
+
+	<resultMap type="MyNote" id="myNoteMap" autoMapping="true">
+		<id column="id" property="id" />
+		<association property="user" column="user_id" javaType="User"
+			resultMap="userMap"></association>
+		
+	</resultMap>
+
+	<resultMap type="User" id="userMap" autoMapping="true">
+		<id property="id" column="user_id" />
+	</resultMap>
+	
+
+	<select id="load" parameterType="int" resultMap="myNoteMap">
+		select * from t_mynote tm inner join t_user tu on tm.user_id = tu.id
+		where tm.id = #{id}
+	</select>
+	
+	
+	<select id="list"  resultMap="myNoteMap">
+		select * from t_mynote tm inner join t_user tu on tm.user_id = tu.id
+		order by tm.id desc
+	</select>
+	
+	<insert id="add"  parameterType="MyNote">
+			INSERT INTO `t_myNote` ( `title`, `content`, `creat_time`,`user_id`) VALUES
+			 (#{title}, #{content}, #{creat_time}, #{user.id});
+			
+	</insert>
+	
+	<delete id="delete"  parameterType="int">
+			delete from t_mynote where id = #{id}
+	</delete>
+	
+	<update id="update"  parameterType="MyNote">
+		UPDATE t_mynote set `title`=#{title}, `content`=#{content} WHERE (`id`=#{id});
+	</update>
+	
+		
+	<update id="edit"  parameterType="MyNote">
+		UPDATE `t_myNote` SET `title`=#{title}, `content`=#{content} WHERE (`id`=#{id});
+	</update>
+	
+	
+	<select id="find" resultMap="myNoteMap" parameterType="map">
+		select * from t_myNote tm inner join t_user tu on tm.user_id = tu.id
+		where tm.title like #{sreach}
+        or tm.content like #{sreach} 
+		order by tu.id asc
+		limit
+		#{pageOffset},#{limit}
+	</select>
+	<select id="find_count" resultType="int" parameterType="String">
+		select count(*) from t_myNote tm inner join t_user tu on tm.user_id = tu.id
+       where tm.title like #{sreach}
+      or tm.content like #{sreach}  or  tu.name like #{sreach} 
+	</select>
+	
+	<select id="listMeeting"  resultType="Meeting">
+			select * from t_meeting;
+	</select>
+</mapper>

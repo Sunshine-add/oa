@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tledu.dao.INoticesDao">
+
+
+	
+	<select id="list"  resultType="Notices">
+		select * from t_news 
+
+	</select>
+
+	
+	<select id="find" resultType="Notices" parameterType="map">
+				select * from t_news 
+		where tm.news_type like #{sreach}
+      or tm.news_content like #{sreach} 
+		
+		limit
+		#{pageOffset},#{limit}
+	</select>
+	<select id="find_count" resultType="Notices" parameterType="String">
+				select * from t_news 
+       where tm.news_type like #{sreach}
+      or tm.news_content like #{sreach}  
+	</select>
+	
+	
+</mapper>
